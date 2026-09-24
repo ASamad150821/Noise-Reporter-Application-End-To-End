@@ -9,7 +9,7 @@ export type YourDetails = {
     email: string
 }
 
-let emptyDetails : YourDetails = {
+const emptyDetails : YourDetails = {
     firstName: "",
     lastName: "",
     email: ""

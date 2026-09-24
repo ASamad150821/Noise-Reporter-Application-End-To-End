@@ -4,17 +4,17 @@ import {useNoiseStore, type NoiseType} from "../store/useNoiseStore"
 
 export default function NoiseType() {
 
-   let OPTIONS : {value: string, label: string}[] = [
+   const OPTIONS : {value: string, label: string}[] = [
     {value: "music", label: "Loud music"},
     {value: "construction", label: "Construction"},
     {value: "shouting", label: "Shouting / arguing"},
     {value: "other", label: "Something else"}
    ]
 
-    let navigate = useNavigate();
-    let noiseType = useNoiseStore((state) => state.noiseType);
-    let setNoiseType = useNoiseStore((state) => state.setNoiseType);
-    let canContinue = noiseType !== "";
+    const navigate = useNavigate();
+    const noiseType = useNoiseStore((state) => state.noiseType);
+    const setNoiseType = useNoiseStore((state) => state.setNoiseType);
+    const canContinue = noiseType !== "";
 
 
    function handleBackButton() {

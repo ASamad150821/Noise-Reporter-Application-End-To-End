@@ -13,16 +13,16 @@ type FieldErrors = Partial<Record<'firstName' | 'lastName' | 'email', string>>;
 
 export default function YourDetails() {
 
-    let navigate = useNavigate();
-    let yourDetails = useNoiseStore((state) => state.yourDetails);
-    let setYourDetails = useNoiseStore((state) => state.setYourDetails);
-    let setCaseReference = useNoiseStore((state) => state.setCaseReference);
-    let noiseType = useNoiseStore((state) => state.noiseType);
-    let howLong = useNoiseStore((state) => state.howLong);
-    let description = useNoiseStore((state) => state.description);
-    let [errors, setErrors] = useState<FieldErrors>({});
+    const navigate = useNavigate();
+    const yourDetails = useNoiseStore((state) => state.yourDetails);
+    const setYourDetails = useNoiseStore((state) => state.setYourDetails);
+    const setCaseReference = useNoiseStore((state) => state.setCaseReference);
+    const noiseType = useNoiseStore((state) => state.noiseType);
+    const howLong = useNoiseStore((state) => state.howLong);
+    const description = useNoiseStore((state) => state.description);
+    const [errors, setErrors] = useState<FieldErrors>({});
 
-    let mutation = useMutation<ReportResponse, Error, YourDetails>({
+    const mutation = useMutation<ReportResponse, Error, YourDetails>({
         mutationFn: (formData) => fetch('/api/submitCase', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

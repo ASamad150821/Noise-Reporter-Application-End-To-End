@@ -4,7 +4,7 @@ import Button from '../components/Button';
 
 export default function Start() {
 
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     
     function handleClick() {
     console.log('Button was clicked! User has been navigated to the next page.');

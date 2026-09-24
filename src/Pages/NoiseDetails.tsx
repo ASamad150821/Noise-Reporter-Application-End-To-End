@@ -12,13 +12,13 @@ import type { ChangeEvent } from "react";
 
 export default function NoiseDetails() {
 
-    let navigate = useNavigate();
-    let howLong = useNoiseStore((state) => state.howLong);
-    let setHowLong = useNoiseStore((state) => state.setHowLong)
-    let description = useNoiseStore((state) => state.description);
-    let setDescription = useNoiseStore((state) => state.setDescription);
+    const navigate = useNavigate();
+    const howLong = useNoiseStore((state) => state.howLong);
+    const setHowLong = useNoiseStore((state) => state.setHowLong)
+    const description = useNoiseStore((state) => state.description);
+    const setDescription = useNoiseStore((state) => state.setDescription);
 
-    let canContinue = description.trim().length > 0 && howLong !== "";
+    const canContinue = description.trim().length > 0 && howLong !== "";
 
     function handleOptionChange(event : ChangeEvent<HTMLSelectElement>) {
         console.log(howLong)
