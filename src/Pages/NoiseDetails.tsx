@@ -48,7 +48,7 @@ export default function NoiseDetails() {
                 <span className="block text-sm font-medium mb-1">
                     How Long Has It Been Happening?
                 </span>
-                <select className="w-full border border-gray-300 rounded p-2" value={howLong} onChange={(event) => handleOptionChange(event)} >
+                <select data-cy="how-long" className="w-full border border-gray-300 rounded p-2" value={howLong} onChange={(event) => handleOptionChange(event)} >
                     <option value="">Choose An Option</option>
                     {
                         DURATIONS.map((duration, index) => {
@@ -64,7 +64,7 @@ export default function NoiseDetails() {
                 <span className="block text-sm font-medium mb-1">
                     Describe The Noise
                 </span>
-                <textarea className="w-full border border-gray-300 rounded p-2 h-32" placeholder="E.g. bass music from a flat above, every night after 11pm" 
+                <textarea data-cy="description" className="w-full border border-gray-300 rounded p-2 h-32" placeholder="E.g. bass music from a flat above, every night after 11pm" 
                 value={description} onChange={(event) => handleDescriptionChange(event)}>
                 </textarea>
             </label>

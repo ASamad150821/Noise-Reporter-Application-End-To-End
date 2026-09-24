@@ -9,7 +9,11 @@
     "dev:server": "tsx watch server/index.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:e2e": "concurrently \"vite --port 5173 --strictPort\" \"REPORTS_DB_PATH=server/reports.e2e.json tsx server/index.ts\"",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test:e2e": "start-server-and-test dev:e2e \"http://localhost:5173|http://localhost:3001/api/health\" cy:run"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.100.14",
@@ -29,11 +33,13 @@
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.5.0",
     "concurrently": "^10.0.3",
+    "cypress": "^16.1.0",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "postcss": "^8.5.15",
+    "start-server-and-test": "^3.0.12",
     "tailwindcss": "^3.4.19",
     "tsx": "^4.22.4",
     "typescript": "~6.0.2",

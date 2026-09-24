@@ -19,7 +19,7 @@ export default function NoiseType() {
 
    function handleBackButton() {
     console.log('Back button was clicked! User has been navigated to the previous page.');
-    navigate("/noise-type")
+    navigate("/")
    }
 
    function handleContinueButton() {

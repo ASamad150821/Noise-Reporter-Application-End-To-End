@@ -9,7 +9,7 @@ export default function Confirmation() {
             <p className="text-sm text-gray-600 mb-2">Thank you for your report. We will be in touch.</p>
             {caseReference && (
                 <p className="text-sm font-medium">
-                    Your case reference: <span className="font-bold">{caseReference}</span>
+                    Your case reference: <span data-cy="case-reference" className="font-bold">{caseReference}</span>
                 </p>
             )}
         </div>

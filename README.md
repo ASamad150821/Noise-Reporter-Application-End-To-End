@@ -1,73 +1,37 @@
-# React + TypeScript + Vite
+# Noise Reporter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![E2E tests](https://github.com/ASamad150821/Noise-Reporter-Application-End-To-End/actions/workflows/e2e.yml/badge.svg)
 
-Currently, two official plugins are available:
+A multi-step form for reporting noise complaints, tested end to end with Cypress.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Stack:** React 19 · TypeScript · Vite · React Router · Zustand (persisted state) · TanStack Query · Zod · Tailwind CSS · Express · Cypress
 
-## React Compiler
+## Running locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open http://localhost:5173. The API runs on port 3001 and saves reports to `server/reports.json`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Tests
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+25 Cypress end-to-end tests cover every page of the journey: navigation, button enable/disable rules, persisted state across reloads, form validation, API payloads, loading and error states (stubbed with `cy.intercept`), plus a full journey and API tests against the real Express server.
+
+```bash
+npm run test:e2e   # start the app, run all specs headlessly, shut down
 ```
+
+To write or debug tests interactively:
+
+```bash
+npm run dev:e2e    # terminal 1
+npm run cy:open    # terminal 2
+```
+
+Test runs write to `server/reports.e2e.json` (git-ignored), so real data is untouched. The suite runs on every push via GitHub Actions.
+
+Writing the tests exposed two bugs, both now fixed: the Back button on the noise type page didn't navigate anywhere, and the shared `Button` component dropped its `disabled` prop, so Continue and Submit could always be clicked.
+
+See [docs/cypress-tutorial.md](docs/cypress-tutorial.md) for a step-by-step guide to how the suite was built.

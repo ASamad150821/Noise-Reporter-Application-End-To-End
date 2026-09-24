@@ -6,7 +6,7 @@ import { resolve } from 'path';
 const app = express();
 app.use(express.json());
 
-const DB_PATH = resolve('server/reports.json');
+const DB_PATH = resolve(process.env.REPORTS_DB_PATH ?? 'server/reports.json');
 
 function loadReports(): object[] {
     if (!existsSync(DB_PATH)) return [];
@@ -16,6 +16,10 @@ function loadReports(): object[] {
 function saveReports(reports: object[]) {
     writeFileSync(DB_PATH, JSON.stringify(reports, null, 2));
 }
+
+app.get('/api/health', (_req, res) => {
+    res.json({ status: 'ok' });
+});
 
 app.post('/api/submitCase', (req, res) => {
     const { firstName, lastName, email, noiseType, howLong, description } = req.body;

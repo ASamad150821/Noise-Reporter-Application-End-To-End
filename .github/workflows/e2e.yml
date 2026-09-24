@@ -1,0 +1,31 @@
+name: E2E tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev:e2e
+          wait-on: 'http://localhost:5173, http://localhost:3001/api/health'
+          command: npm run cy:run
+
+      - name: Upload screenshots of failed tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots

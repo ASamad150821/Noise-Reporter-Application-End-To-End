@@ -16,7 +16,7 @@ export default function Button({ variant = 'primary', className = '', disabled, 
       : 'bg-gray-200 text-gray-800 hover:bg-gray-300';
 
     return (
-    <button className={`${base} ${styles} ${className}`} {...rest}>
+    <button className={`${base} ${styles} ${className}`} disabled={disabled} {...rest}>
       {children}
     </button>
     )
