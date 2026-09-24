@@ -1,4 +1,15 @@
-export function YourDetailsField({children, type, value, onChange, detailsToChange, error}) {
+import type { ChangeEvent, ReactNode } from "react";
+
+type YourDetailsFieldProps = {
+    children: ReactNode;
+    type: string;
+    value: string;
+    onChange: (event: ChangeEvent<HTMLInputElement>, field: string) => void;
+    detailsToChange: string;
+    error?: string;
+};
+
+export function YourDetailsField({children, type, value, onChange, detailsToChange, error} : YourDetailsFieldProps) {
     return (
         <div>
             <label className="block mb-4">
