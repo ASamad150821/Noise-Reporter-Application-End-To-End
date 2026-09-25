@@ -84,7 +84,7 @@ describe('Your details page', () => {
       cy.location('pathname').should('eq', '/confirmation');
     });
 
-    it('stays on the page if the server returns an error', () => {
+    it('stays on the page and shows an error if the server fails', () => {
       cy.intercept('POST', '/api/submitCase', { statusCode: 500 }).as('submitCase');
 
       cy.fixture('reporter').then((reporter) => cy.fillYourDetails(reporter));
@@ -92,6 +92,7 @@ describe('Your details page', () => {
       cy.wait('@submitCase');
 
       cy.location('pathname').should('eq', '/your-details');
+      cy.get('[data-cy="submit-error"]').should('be.visible');
       cy.contains('button', 'Submit').should('be.enabled');
     });
   });

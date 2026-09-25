@@ -1,82 +1,80 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import Button from "../components/Button";
-import { useNoiseStore, type YourDetails } from "../store/useNoiseStore";
-
-type ReportResponse = { caseReference: string };
-import { useState, type ChangeEvent } from "react";
 import { YourDetailsField } from "../components/YourDetailsField";
 import { yourDetailsSchema } from "../schemas/YourDetails";
-import { ZodError } from "zod";
-import { useMutation } from "@tanstack/react-query";
+import { useNoiseStore, type YourDetails } from "../store/useNoiseStore";
 
-type FieldErrors = Partial<Record<'firstName' | 'lastName' | 'email', string>>;
+type FieldErrors = Partial<Record<keyof YourDetails, string>>;
+type ReportResponse = { caseReference: string };
 
-export default function YourDetails() {
+export default function YourDetailsPage() {
+  const navigate = useNavigate();
+  const yourDetails = useNoiseStore((state) => state.yourDetails);
+  const setYourDetails = useNoiseStore((state) => state.setYourDetails);
+  const setCaseReference = useNoiseStore((state) => state.setCaseReference);
+  const noiseType = useNoiseStore((state) => state.noiseType);
+  const howLong = useNoiseStore((state) => state.howLong);
+  const description = useNoiseStore((state) => state.description);
+  const [errors, setErrors] = useState<FieldErrors>({});
 
-    const navigate = useNavigate();
-    const yourDetails = useNoiseStore((state) => state.yourDetails);
-    const setYourDetails = useNoiseStore((state) => state.setYourDetails);
-    const setCaseReference = useNoiseStore((state) => state.setCaseReference);
-    const noiseType = useNoiseStore((state) => state.noiseType);
-    const howLong = useNoiseStore((state) => state.howLong);
-    const description = useNoiseStore((state) => state.description);
-    const [errors, setErrors] = useState<FieldErrors>({});
+  const mutation = useMutation({
+    mutationFn: async (details: YourDetails): Promise<ReportResponse> => {
+      const res = await fetch('/api/submitCase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...details, noiseType, howLong, description }),
+      });
+      if (!res.ok) throw new Error(`Server error: ${res.status}`);
+      return res.json();
+    },
+    onSuccess: (data) => {
+      setCaseReference(data.caseReference);
+      navigate("/confirmation");
+    },
+  });
 
-    const mutation = useMutation<ReportResponse, Error, YourDetails>({
-        mutationFn: (formData) => fetch('/api/submitCase', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...formData, noiseType, howLong, description }),
-        }).then(res => {
-            if (!res.ok) throw new Error(`Server error: ${res.status}`);
-            return res.json();
-        }),
-        onSuccess: (data) => {
-            setCaseReference(data.caseReference);
-            navigate("/confirmation");
-        },
-        onError: () => console.log('Something went wrong.'),
-    });
+  function handleChange(field: keyof YourDetails, value: string) {
+    setYourDetails({ ...yourDetails, [field]: value });
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
+  }
 
+  function handleSubmit() {
+    const result = yourDetailsSchema.safeParse(yourDetails);
 
-    function handleBackButton() {
-        navigate("/noise-details")
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0] as keyof YourDetails;
+        fieldErrors[field] ??= issue.message;
+      }
+      setErrors(fieldErrors);
+      return;
     }
 
-    function handleContinueButton() {
-        try {
-            yourDetailsSchema.parse(yourDetails);
-            mutation.mutate(yourDetails)
-        } catch (err) {
-            if (err instanceof ZodError) {
-                const fieldErrors: FieldErrors = {};
-                for (const issue of err.issues) {
-                    const field = issue.path[0] as keyof FieldErrors;
-                    if (!fieldErrors[field]) fieldErrors[field] = issue.message;
-                }
-                setErrors(fieldErrors);
-            }
-        }
-    }
+    mutation.mutate(yourDetails);
+  }
 
-    function handleDetailsChange(event : ChangeEvent<HTMLInputElement>, field : string) {
-      setYourDetails({ ...yourDetails, [field]: event.target.value });
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
+  return (
+    <div>
+      <h2 className="text-lg font-semibold mb-4">Your Details</h2>
+      <p className="text-sm text-gray-600 mb-4">We need these details so that we can contact you about the case</p>
 
-    return (
-        <div>
-            <h2 className="text-lg font-semibold mb-4">Your Details</h2>
-            <p className="text-sm text-gray-600 mb-4">We need these details so that we can contact you about the case</p>
+      <YourDetailsField field="firstName" value={yourDetails.firstName} error={errors.firstName} onChange={handleChange}>First Name</YourDetailsField>
+      <YourDetailsField field="lastName" value={yourDetails.lastName} error={errors.lastName} onChange={handleChange}>Last Name</YourDetailsField>
+      <YourDetailsField field="email" type="email" value={yourDetails.email} error={errors.email} onChange={handleChange}>Email</YourDetailsField>
 
-            <YourDetailsField type="input" value={yourDetails.firstName} onChange={handleDetailsChange} detailsToChange="firstName" error={errors.firstName}>First Name</YourDetailsField>
-            <YourDetailsField type="input" value={yourDetails.lastName} onChange={handleDetailsChange} detailsToChange="lastName" error={errors.lastName}>Last Name</YourDetailsField>
-            <YourDetailsField type="input" value={yourDetails.email} onChange={handleDetailsChange} detailsToChange="email" error={errors.email}>Email</YourDetailsField>
+      {mutation.isError && (
+        <p data-cy="submit-error" role="alert" className="text-sm text-red-600 mb-4">
+          Something went wrong sending your report. Please try again.
+        </p>
+      )}
 
-            <div className="flex justify-between">
-                <Button variant="secondary" onClick={handleBackButton}>Back</Button>
-                <Button variant="primary" onClick={handleContinueButton} disabled={mutation.isPending}>Submit</Button>
-            </div>
-        </div>
-    )
+      <div className="flex justify-between">
+        <Button variant="secondary" onClick={() => navigate("/noise-details")}>Back</Button>
+        <Button variant="primary" onClick={handleSubmit} disabled={mutation.isPending}>Submit</Button>
+      </div>
+    </div>
+  );
 }

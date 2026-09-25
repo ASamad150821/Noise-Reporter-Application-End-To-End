@@ -1,20 +1,22 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Start from './Pages/Start';
-import NoiseType from './Pages/NoiseType';
-import NoiseDetails from './Pages/NoiseDetails';
-import YourDetails from './Pages/YourDetails';
-import Confirmation from './Pages/Confirmation';
+import StartPage from './Pages/Start';
+import NoiseTypePage from './Pages/NoiseType';
+import NoiseDetailsPage from './Pages/NoiseDetails';
+import YourDetailsPage from './Pages/YourDetails';
+import ConfirmationPage from './Pages/Confirmation';
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Start></Start>}></Route>
-        <Route path="/noise-type" element={<NoiseType></NoiseType>}></Route>
-        <Route path="/noise-details" element={<NoiseDetails></NoiseDetails>}></Route>
-        <Route path="/your-details" element={<YourDetails></YourDetails>}></Route>
-        <Route path="/confirmation" element={<Confirmation></Confirmation>}></Route>
-      </Routes>
+      <main className="max-w-xl mx-auto p-6">
+        <Routes>
+          <Route path="/" element={<StartPage />} />
+          <Route path="/noise-type" element={<NoiseTypePage />} />
+          <Route path="/noise-details" element={<NoiseDetailsPage />} />
+          <Route path="/your-details" element={<YourDetailsPage />} />
+          <Route path="/confirmation" element={<ConfirmationPage />} />
+        </Routes>
+      </main>
     </BrowserRouter>
   );
 }

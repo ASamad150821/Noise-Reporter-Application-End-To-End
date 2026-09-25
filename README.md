@@ -34,4 +34,10 @@ Test runs write to `server/reports.e2e.json` (git-ignored), so real data is unto
 
 Writing the tests exposed two bugs, both now fixed: the Back button on the noise type page didn't navigate anywhere, and the shared `Button` component dropped its `disabled` prop, so Continue and Submit could always be clicked.
 
-See [docs/cypress-tutorial.md](docs/cypress-tutorial.md) for a step-by-step guide to how the suite was built.
+## Tutorials: build it yourself
+
+Three step-by-step guides rebuild this app from an empty folder. Every file is included in full, and following all three gives you exactly the code in this repo.
+
+1. [Front end](docs/01-frontend-tutorial.md): Vite, React pages, routing, the persisted Zustand store, Zod validation, and submitting with TanStack Query
+2. [Back end](docs/02-backend-tutorial.md): the Express API that assigns case references and stores reports, and the Vite proxy that connects the two
+3. [Cypress tests](docs/03-cypress-tutorial.md): the 25-test end-to-end suite, stubbing and spying on requests, and running it in GitHub Actions

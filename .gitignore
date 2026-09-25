@@ -27,3 +27,6 @@ dist-ssr
 cypress/videos
 cypress/screenshots
 server/reports.e2e.json
+
+# Submitted reports contain personal data; the server creates this file on first use
+server/reports.json
